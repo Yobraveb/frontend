@@ -1,3 +1,44 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('contactForm');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Get form field values
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
+
+    if (!name || !email || !message) {
+      alert('Please fill in all fields.');
+      return;
+    }
+
+    try {
+      // Send POST request to Render backend
+      const res = await fetch('https://optometry-backend.onrender.com/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, message })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(data.message || 'Message sent successfully!');
+        form.reset();
+      } else {
+        alert(data.error || 'Failed to send message.');
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      alert('Error connecting to the server.');
+    }
+  });
+});
+
  // Theme Management
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
